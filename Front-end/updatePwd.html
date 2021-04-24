@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>password update of user</title>
+    <style>
+        .flex{
+            display: flex;
+            line-height: 40px;
+        }
+        input{
+            width: 100%;
+            height: 40px;
+            border: 1px solid #eee;
+            margin-bottom: 20px;
+            outline: none !important;
+            padding-left: 15px;
+            box-sizing: border-box;
+        }
+        label{
+            flex: 0 0 130px;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="form1">
+        <div class="flex">
+            <label>user：</label><input type="text" id="username" name="name" value=""><br />
+        </div>
+       <div  class="flex"><label>old password：</label> <input type="password" id="userpswd" name="pswd" value=""><br />
+        </div>
+        <div  class="flex"><label>new password：</label> <input type="password" id="userpswd2" name="pswd2" value=""><br />
+        </div>
+        <input type="button" value="password update of user" onclick="submitData();" />
+     
+    </form>
+    <script src="./js/cookie.js"></script>
+    <script>
+
+        function submitData() {
+            
+            var obj = {
+                name: document.getElementById("username").value.trim(),
+                pwd: document.getElementById("userpswd").value.trim(),
+                pwd2: document.getElementById("userpswd2").value.trim()
+            };
+            if(!obj.name){
+                alert('user not null')
+                return;
+            }else if(!obj.pwd){
+                alert('old password not null')
+                return;
+            }else if(!obj.pwd2){
+                alert('new password not null')
+                return;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('put', 'http://121.4.191.177:3000/user/update', true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=utf8");
+
+            xhr.onload = function (e) {
+                if (this.status == 200) {
+                    // alert(this.response);
+                    console.log(this.response)
+                    let res = JSON.parse(this.response).result
+                    if(res){
+                        alert('update password success');
+                        location.href='./login.html'
+                    }else{
+                        alert('update password fail, user or password error')
+                    }
+                }
+            };
+
+            xhr.send(JSON.stringify(obj));
+        }
+    </script>
+</body>
+
+</html>

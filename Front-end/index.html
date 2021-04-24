@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>play</title>
+    <style>
+        table{
+            width: 100%;
+        }
+    td{
+        background-image: url(imgs/1.png);
+        background-size: 100% 100%;
+    }
+    </style>
+</head>
+<body>
+    <table border="" width="600px" height="600px"></table>
+    <script src="./js/cookie.js"></script>
+    <script>
+        const user = getCookie('user')
+        if(!user){
+            alert('login error')
+            location.href = './login.html'
+        }
+    </script>
+    <script>
+
+        var num = 3;
+        show(4);
+        function show(num){
+            var str = "<td></td>".repeat(num);
+            str =("<tr>" + str + "</tr>").repeat(num);
+            document.getElementsByTagName("table")[0].innerHTML =str;
+            var tds = document.getElementsByTagName('td')
+            var index = Math.floor(Math.random()*tds.length)
+            tds[index].style.backgroundImage= 'url(imgs/2.png)';
+            tds[index].onclick = function(){
+                show(++num)
+            }
+        }
+
+
+    
+    </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin info</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+
+<body>
+    Number of interface visits
+    <table border="1">
+        <tr>
+            <td>api</td>
+            <td>visit number</td>
+        </tr>
+        <!-- <tr>visit number</tr> -->
+    </table>
+    <br>
+    <br>
+    select all user
+    <table border="1">
+        <tr>
+            <td>user</td>
+            <td>password</td>
+            <td>operate</td>
+        </tr>
+    </table>
+
+
+    <script src="./js/cookie.js"></script>
+    <script>
+        const user = getCookie('admin')
+        if (!user) {
+            alert('admin login error')
+            location.href = './admin.html'
+        }
+    </script>
+    <script>
+        // delete user
+        function delUser(id) {
+            console.log(id);
+            if (confirm('confirm delete?')) {
+                var xhr2 = new XMLHttpRequest();
+                xhr2.open('delete', 'http://121.4.191.177:3000/user/delete/'+id, true);
+                xhr2.onload = function (e) {
+                    if (this.status == 200) {
+                        // alert(this.response);
+                        console.log(this.response)
+                        let res = JSON.parse(this.response).result
+                        if (res) {
+                            alert('delete success');
+                            getUsers();
+                        } else {
+                            alert('delete fail')
+                        }
+                    }
+                };
+
+                xhr2.send();
+            }
+        }
+        var tables = document.getElementsByTagName('table');
+        getUsers();
+        // select all user
+        function getUsers() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('get', 'http://121.4.191.177:3000/user/get', true);
+            xhr.onload = function (e) {
+                if (this.status == 200) {
+                    // alert(this.response);
+                    // console.log(this.response)
+                    let arr = JSON.parse(this.response).result
+                    console.log(arr)
+                    let str = `
+                    <tr>
+                        <td>user</td>
+                        <td>password</td>
+                        <td>operate</td>
+                    </tr>
+                `
+                    for (let i in arr) {
+                        str += ` <tr>
+                                <td>${arr[i].name}</td>
+                                <td>${arr[i].password} </td>
+                                <td><button onclick="delUser(${arr[i].id})">delete user</button></td>
+                            </tr>`
+                    }
+                    tables[1].innerHTML = str
+                }
+            };
+
+            xhr.send();
+        }
+
+        getApiInfo();
+        // get api info
+        function getApiInfo() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('get', 'http://121.4.191.177:3000/api/get', true);
+            xhr.onload = function (e) {
+                if (this.status == 200) {
+                    let arr = JSON.parse(this.response).result
+                    let str = `
+                    <tr>
+                        <td>api</td>
+                        <td>visit number</td>
+                    </tr>
+                `
+                    for (let i in arr) {
+                        str += ` <tr>
+                                <td>${arr[i].api}</td>
+                                <td>${arr[i].num} </td>
+                            </tr>`
+                    }
+                    tables[0].innerHTML = str
+                }
+            };
+
+            xhr.send();
+        }
+
+
+    </script>
+
+</body>
+
+</html>
